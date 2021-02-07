@@ -51,48 +51,57 @@ impl PokerHandEvaluator {
         generated
     }
 
-    /*fn compare_four_of_a_kind(a: Vec<u64>, b: Vec<u64>) -> Option<Ordering> {
-        let res = Option::None;
-        for i in (0..13).rev() {
-            if a[i] >= 4 || b[i] >= 4 {
-                if a[i] < 4 {
-                    return Some(Ordering::Less);
-                } else if b[i] < 4 {
-                    return Some(Ordering::Greater);
-                }
-                else {}
+    fn sort_non_flush(hands: &mut Vec<PokerHandNonFlush>) {
+        let mut foak_vec = vec![];
+        let mut full_house_vec = vec![];
+        let mut straight_vec = vec![];
+        let mut toak_vec = vec![];
+        let mut two_pairs_vec = vec![];
+        let mut pairs_vec = vec![];
+        let mut high_card_vec = vec![];
+
+        for hand in hands.iter() {
+            let foak = hand.foak();
+            if foak.is_some() {
+                foak_vec.push(foak.unwrap());
+            }
+            let full_house = hand.full_house();
+            if full_house.is_some() {
+                full_house_vec.push(full_house.unwrap());
+            }
+            let straight = hand.straight();
+            if straight.is_some() {
+                straight_vec.push(straight.unwrap());
+            }
+            let toak = hand.toak();
+            if toak.is_some() {
+                toak_vec.push(toak.unwrap());
+            }
+            let two_pairs = hand.two_pairs();
+            if two_pairs.is_some() {
+                two_pairs_vec.push(two_pairs.unwrap());
+            }
+            let pairs = hand.pair();
+            if pairs.is_some() {
+                pairs_vec.push(pairs.unwrap());
+            }
+            let high_card = hand.high_card();
+            if high_card.is_some() {
+                high_card_vec.push(high_card.unwrap());
             }
         }
 
-        return res;
-    }*/
+        foak_vec.sort();
+        full_house_vec.sort();
+        straight_vec.sort();
+        toak_vec.sort();
+        two_pairs_vec.sort();
+        pairs_vec.sort();
+        high_card_vec.sort();
 
-    fn sort_non_flush(hands: &mut Vec<PokerHandNonFlush>) {
-        /*let foak = vec![];
-        let full_house = vec![];
-        let straight = vec![];
-        let toak = vec![];
-        let two_pairs = vec![];
-        let pairs = vec![];
-        let high_card = vec![];*/
-
-        /*for hand in hands.iter() {
-            if hand.is_foak() {
-                foak.push(hand);
-            } else if hand.is_full_house() {
-                full_house.push(hand);
-            } else if hand.is_straight() {
-                straight.push(hand);
-            } else if hand.is_toak() {
-                toak.push(hand);
-            } else if hand.is_two_pairs() {
-                two_pairs.push(hand);
-            } else if hand.is_pairs() {
-                pairs.push(hand);
-            } else {
-                high_card.push(hand);
-            }
-        }*/
+        for i in 0..5 {
+            println!("Je tu aj {:?}", foak_vec[i]);
+        }
     }
 
     fn prepare_non_flush_table() -> HashMap<PokerHandNonFlush, u64> {
