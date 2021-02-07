@@ -1,4 +1,5 @@
 pub mod poker_hand;
+pub mod ranks;
 
 use crate::poker_hand::{PokerHand, PokerHandFast, PokerHandNonFlush};
 use std::cmp::min;
