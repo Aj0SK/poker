@@ -64,30 +64,37 @@ impl PokerHandEvaluator {
             let foak = hand.foak();
             if foak.is_some() {
                 foak_vec.push(foak.unwrap());
+                continue;
             }
             let full_house = hand.full_house();
             if full_house.is_some() {
                 full_house_vec.push(full_house.unwrap());
+                continue;
             }
             let straight = hand.straight();
             if straight.is_some() {
                 straight_vec.push(straight.unwrap());
+                continue;
             }
             let toak = hand.toak();
             if toak.is_some() {
                 toak_vec.push(toak.unwrap());
+                continue;
             }
             let two_pairs = hand.two_pairs();
             if two_pairs.is_some() {
                 two_pairs_vec.push(two_pairs.unwrap());
+                continue;
             }
             let pairs = hand.pair();
             if pairs.is_some() {
                 pairs_vec.push(pairs.unwrap());
+                continue;
             }
             let high_card = hand.high_card();
             if high_card.is_some() {
                 high_card_vec.push(high_card.unwrap());
+                continue;
             }
         }
 
@@ -99,8 +106,8 @@ impl PokerHandEvaluator {
         pairs_vec.sort();
         high_card_vec.sort();
 
-        for i in 0..5 {
-            println!("Je tu aj {:?}", foak_vec[i]);
+        for i in 0..10 {
+            println!("Je tu aj {:?}", full_house_vec[i]);
         }
     }
 
