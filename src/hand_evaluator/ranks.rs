@@ -2,7 +2,7 @@ use std::cmp::Ord;
 use std::cmp::Ordering;
 use std::cmp::PartialOrd;
 
-use crate::poker_hand::*;
+use super::flush::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FourOfAKind {

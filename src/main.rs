@@ -1,14 +1,31 @@
 pub mod hand_evaluator;
-pub mod poker_hand;
-pub mod ranks;
+pub mod poker_basics;
 
 use crate::hand_evaluator::PokerHandEvaluator;
-use crate::poker_hand::{PokerHand, PokerHandFast, PokerHandNonFlush};
+use crate::poker_basics::card::{PokerHand, Suit};
+
+// based on https://www.pokerlistings.com/which-hand-wins-calculator
 
 fn main() {
     let evaluator = PokerHandEvaluator::new();
-    let h1 = PokerHand::new([(1, 1), (1, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 8)]);
-    let h2 = PokerHand::new([(1, 1), (1, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)]);
+    let h1 = PokerHand::new([
+        (Suit::Spades, 1),
+        (Suit::Spades, 2),
+        (Suit::Spades, 5),
+        (Suit::Spades, 6),
+        (Suit::Diamonds, 5),
+        (Suit::Diamonds, 6),
+        (Suit::Diamonds, 8),
+    ]);
+    let h2 = PokerHand::new([
+        (Suit::Spades, 1),
+        (Suit::Clubs, 2),
+        (Suit::Spades, 5),
+        (Suit::Clubs, 7),
+        (Suit::Diamonds, 5),
+        (Suit::Diamonds, 6),
+        (Suit::Diamonds, 8),
+    ]);
 
     println!("Je to {0} {1}\n", evaluator.eval(h1), evaluator.eval(h2));
 }
