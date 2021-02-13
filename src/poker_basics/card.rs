@@ -10,7 +10,7 @@ pub struct PokerHand {
 }
 
 #[derive(Debug, Copy, Clone)]
-pub struct PokerHandFast(u64);
+pub struct PokerHandFast(pub u64);
 
 #[derive(Debug, Copy, Clone)]
 pub enum Suit {
