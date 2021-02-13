@@ -83,3 +83,41 @@ impl PokerHandFast {
         repr
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn is_flush() {
+        let c1 = [
+            (Suit::Clubs, 1),
+            (Suit::Clubs, 2),
+            (Suit::Clubs, 3),
+            (Suit::Clubs, 4),
+            (Suit::Clubs, 5),
+            (Suit::Diamonds, 6),
+            (Suit::Diamonds, 7),
+        ];
+        let c2 = [
+            (Suit::Clubs, 1),
+            (Suit::Clubs, 2),
+            (Suit::Diamonds, 3),
+            (Suit::Diamonds, 4),
+            (Suit::Diamonds, 5),
+            (Suit::Diamonds, 6),
+            (Suit::Diamonds, 7),
+        ];
+        let c3 = [
+            (Suit::Clubs, 1),
+            (Suit::Diamonds, 2),
+            (Suit::Hearts, 3),
+            (Suit::Spades, 4),
+            (Suit::Clubs, 5),
+            (Suit::Diamonds, 6),
+            (Suit::Hearts, 7),
+        ];
+        assert_eq!(PokerHand::new(c1).get_fast().is_flush(), true);
+        assert_eq!(PokerHand::new(c2).get_fast().is_flush(), true);
+        assert_eq!(PokerHand::new(c3).get_fast().is_flush(), false);
+    }
+}

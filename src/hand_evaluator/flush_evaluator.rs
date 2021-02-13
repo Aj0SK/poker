@@ -1,8 +1,7 @@
-use crate::poker_basics::card::{PokerCard, PokerHand, PokerHandFast};
+use crate::poker_basics::card::PokerHandFast;
 
 use std::cmp::Ord;
 use std::cmp::Ordering;
-use std::cmp::PartialOrd;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct FlushEvaluator {
@@ -65,5 +64,18 @@ impl FlushEvaluator {
 
     pub fn eval(&self, h: PokerHandFast) -> u64 {
         self.flush_helper[h.flush_val() as usize]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn is_straight() {
+        assert_eq!(FlushEvaluator::is_straight(0b0_0000_0000_0000), false);
+        assert_eq!(FlushEvaluator::is_straight(0b0_1010_1010_1001), false);
+        assert_eq!(FlushEvaluator::is_straight(0b0_1011_1000_1000), false);
+        assert_eq!(FlushEvaluator::is_straight(0b1_1111_0000_1000), true);
+        assert_eq!(FlushEvaluator::is_straight(0b0_1111_1000_1000), true);
     }
 }

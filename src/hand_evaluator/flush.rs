@@ -1,9 +1,4 @@
-use std::cmp::Ord;
-use std::cmp::Ordering;
-use std::cmp::PartialOrd;
-
 use super::ranks::*;
-use crate::poker_basics::card::PokerCard;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PokerHandNonFlush(pub Vec<u64>);
