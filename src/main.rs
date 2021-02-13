@@ -2,16 +2,22 @@ pub mod hand_evaluator;
 pub mod poker_basics;
 
 use crate::hand_evaluator::fast_hand::PokerHandFast;
+use crate::hand_evaluator::PokerHandEvaluator;
 use crate::poker_basics::card::{PokerCard, PokerHand, Suit};
 
 // based on https://www.pokerlistings.com/which-hand-wins-calculator
 
 fn main() {
-    for _i in 0..1_000 {
-        let hand: PokerHand = rand::random();
-        let is_flush = hand.get_fast().is_flush();
-        if is_flush {
-            println!("Hand is {:?}\n", hand);
-        }
+    let size = 1_000;
+    let mut hands: Vec<PokerHand> = (0..size).map(|_| rand::random()).collect();
+    let eval: PokerHandEvaluator = PokerHandEvaluator::new();
+    hands.sort_by(|a, b| {
+        let a_num = eval.eval(*a);
+        let b_num = eval.eval(*b);
+        a_num.cmp(&b_num)
+    });
+
+    for (i, hand) in hands.iter().enumerate() {
+        println!("{} {}\n", i, hand);
     }
 }

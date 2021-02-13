@@ -26,7 +26,7 @@ impl PokerHandEvaluator {
 
     pub fn eval_fast(&self, h: PokerHandFast) -> u64 {
         if h.is_flush() {
-            self.flush_evaluator.eval(h)
+            1_000_000_000_000 + self.flush_evaluator.eval(h)
         } else {
             self.non_flush_helper.evaluate(h)
         }
