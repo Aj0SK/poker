@@ -1,5 +1,7 @@
-use crate::poker_basics::card::{PokerHand, PokerHandFast};
+use crate::hand_evaluator::fast_hand::*;
+use crate::poker_basics::card::PokerHand;
 
+pub mod fast_hand;
 pub mod flush;
 pub mod flush_evaluator;
 pub mod non_flush_evaluator;
@@ -22,19 +24,15 @@ impl PokerHandEvaluator {
         }
     }
 
-    fn eval_non_flush(&self, h: PokerHandFast) -> u64 {
-        self.non_flush_helper.evaluate(h)
-    }
-
     pub fn eval_fast(&self, h: PokerHandFast) -> u64 {
         if h.is_flush() {
             self.flush_evaluator.eval(h)
         } else {
-            self.eval_non_flush(h)
+            self.non_flush_helper.evaluate(h)
         }
     }
     pub fn eval(&self, h: PokerHand) -> u64 {
-        self.eval_fast(h.get_fast())
+        self.eval_fast(PokerHandFast::new(h))
     }
 }
 

@@ -21,12 +21,6 @@ impl Ord for FourOfAKind {
     }
 }
 
-impl PartialOrd for FourOfAKind {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Straight {
     pub hand: PokerHandNonFlush,
@@ -41,12 +35,6 @@ impl Ord for Straight {
         } else {
             self.high_card.cmp(&other.high_card)
         }
-    }
-}
-
-impl PartialOrd for Straight {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
     }
 }
 
@@ -70,12 +58,6 @@ impl Ord for FullHouse {
     }
 }
 
-impl PartialOrd for FullHouse {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ThreeOfAKind {
     pub hand: PokerHandNonFlush,
@@ -90,12 +72,6 @@ impl Ord for ThreeOfAKind {
         } else {
             self.high_card.cmp(&other.high_card)
         }
-    }
-}
-
-impl PartialOrd for ThreeOfAKind {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
     }
 }
 
@@ -119,12 +95,6 @@ impl Ord for TwoPairs {
     }
 }
 
-impl PartialOrd for TwoPairs {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Pair {
     pub hand: PokerHandNonFlush,
@@ -142,12 +112,6 @@ impl Ord for Pair {
     }
 }
 
-impl PartialOrd for Pair {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct HighCard {
     pub hand: PokerHandNonFlush,
@@ -157,6 +121,44 @@ pub struct HighCard {
 impl Ord for HighCard {
     fn cmp(&self, other: &Self) -> Ordering {
         self.value.cmp(&other.value)
+    }
+}
+
+////////////////////////////////////////////// PartialOrd //////////////////////////////////////////////
+
+impl PartialOrd for FourOfAKind {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialOrd for Straight {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialOrd for FullHouse {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialOrd for ThreeOfAKind {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialOrd for TwoPairs {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialOrd for Pair {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 

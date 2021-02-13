@@ -1,4 +1,4 @@
-use crate::poker_basics::card::PokerHandFast;
+use super::fast_hand::PokerHandFast;
 
 use std::cmp::Ord;
 use std::cmp::Ordering;

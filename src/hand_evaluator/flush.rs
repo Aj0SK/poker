@@ -3,30 +3,30 @@ use super::ranks::*;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PokerHandNonFlush(pub Vec<u64>);
 
+fn find_first_greater(v: &Vec<u64>, left: u64, right: u64, val: u64) -> Option<u64> {
+    let mut best_index: Option<u64> = None;
+    for i in left..right {
+        if v[i as usize] > val {
+            best_index = Some(i);
+        }
+    }
+    best_index
+}
+
 impl PokerHandNonFlush {
     pub fn new(hand: Vec<u64>) -> Self {
         Self(hand)
     }
 
-    fn find_first_greater(v: &Vec<u64>, left: u64, right: u64, val: u64) -> Option<u64> {
-        let mut best_index: Option<u64> = None;
-        for i in left..right {
-            if v[i as usize] > val {
-                best_index = Some(i);
-            }
-        }
-        best_index
-    }
-
     pub fn foak(&self) -> Option<FourOfAKind> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 3);
+        let i = find_first_greater(&self.0, 0, 13, 3);
         if i.is_none() {
             return None;
         }
         let i = i.unwrap();
         let mut arr_without_foak = self.0.clone();
         arr_without_foak[i as usize] -= 4;
-        let j = PokerHandNonFlush::find_first_greater(&arr_without_foak, 0, 13, 0);
+        let j = find_first_greater(&arr_without_foak, 0, 13, 0);
         if j.is_none() {
             return None;
         }
@@ -63,7 +63,7 @@ impl PokerHandNonFlush {
         arr_without_straight[((index + 3) % 13) as usize] -= 1;
         arr_without_straight[((index + 4) % 13) as usize] -= 1;
 
-        let k = PokerHandNonFlush::find_first_greater(&arr_without_straight, 0, 13, 0);
+        let k = find_first_greater(&arr_without_straight, 0, 13, 0);
         if k.is_none() {
             return None;
         }
@@ -76,21 +76,21 @@ impl PokerHandNonFlush {
     }
 
     pub fn full_house(&self) -> Option<FullHouse> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 2);
+        let i = find_first_greater(&self.0, 0, 13, 2);
         if i.is_none() {
             return None;
         }
         let i = i.unwrap();
         let mut arr_without_three = self.0.clone();
         arr_without_three[i as usize] -= 3;
-        let j = PokerHandNonFlush::find_first_greater(&arr_without_three, 0, 13, 1);
+        let j = find_first_greater(&arr_without_three, 0, 13, 1);
         if j.is_none() {
             return None;
         }
         let j = j.unwrap();
         let mut arr_without_full_house = arr_without_three.clone();
         arr_without_full_house[j as usize] -= 2;
-        let k = PokerHandNonFlush::find_first_greater(&arr_without_full_house, 0, 13, 0);
+        let k = find_first_greater(&arr_without_full_house, 0, 13, 0);
         if k.is_none() {
             return None;
         }
@@ -104,14 +104,14 @@ impl PokerHandNonFlush {
     }
 
     pub fn toak(&self) -> Option<ThreeOfAKind> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 2);
+        let i = find_first_greater(&self.0, 0, 13, 2);
         if i.is_none() {
             return None;
         }
         let i = i.unwrap();
         let mut arr_without_three = self.0.clone();
         arr_without_three[i as usize] -= 3;
-        let j = PokerHandNonFlush::find_first_greater(&arr_without_three, 0, 13, 0);
+        let j = find_first_greater(&arr_without_three, 0, 13, 0);
         if j.is_none() {
             return None;
         }
@@ -124,21 +124,21 @@ impl PokerHandNonFlush {
     }
 
     pub fn two_pairs(&self) -> Option<TwoPairs> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 1);
+        let i = find_first_greater(&self.0, 0, 13, 1);
         if i.is_none() {
             return None;
         }
         let i = i.unwrap();
         let mut arr_without_pair = self.0.clone();
         arr_without_pair[i as usize] -= 2;
-        let j = PokerHandNonFlush::find_first_greater(&arr_without_pair, 0, 13, 1);
+        let j = find_first_greater(&arr_without_pair, 0, 13, 1);
         if j.is_none() {
             return None;
         }
         let j = j.unwrap();
         let mut arr_without_two_pairs = arr_without_pair.clone();
         arr_without_two_pairs[j as usize] -= 2;
-        let k = PokerHandNonFlush::find_first_greater(&arr_without_two_pairs, 0, 13, 0);
+        let k = find_first_greater(&arr_without_two_pairs, 0, 13, 0);
         if k.is_none() {
             return None;
         }
@@ -152,14 +152,14 @@ impl PokerHandNonFlush {
     }
 
     pub fn pair(&self) -> Option<Pair> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 1);
+        let i = find_first_greater(&self.0, 0, 13, 1);
         if i.is_none() {
             return None;
         }
         let i = i.unwrap();
         let mut arr_without_pair = self.0.clone();
         arr_without_pair[i as usize] -= 2;
-        let k = PokerHandNonFlush::find_first_greater(&arr_without_pair, 0, 13, 0);
+        let k = find_first_greater(&arr_without_pair, 0, 13, 0);
         if k.is_none() {
             return None;
         }
@@ -172,7 +172,7 @@ impl PokerHandNonFlush {
     }
 
     pub fn high_card(&self) -> Option<HighCard> {
-        let i = PokerHandNonFlush::find_first_greater(&self.0, 0, 13, 0);
+        let i = find_first_greater(&self.0, 0, 13, 0);
         if i.is_none() {
             return None;
         }

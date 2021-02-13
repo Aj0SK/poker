@@ -1,7 +1,7 @@
-use crate::poker_basics::card::PokerHandFast;
 use std::cmp::min;
 use std::collections::HashMap;
 
+use super::fast_hand::PokerHandFast;
 use super::flush::PokerHandNonFlush;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
