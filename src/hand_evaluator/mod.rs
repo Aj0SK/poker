@@ -41,7 +41,6 @@ impl PokerHandEvaluator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::poker_basics::card::*;
 
     #[test]
     fn eval_non_flush() {
