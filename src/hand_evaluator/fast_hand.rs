@@ -105,6 +105,10 @@ mod tests {
             }
             let hand = PokerHand::from_cards(cards.into_iter());
             assert_eq!(hand.get_fast().is_flush(), true);
+            assert_eq!(
+                hand.get_fast().flush_val().count_ones() as u64,
+                flush_cards_count as u64
+            );
         }
     }
 

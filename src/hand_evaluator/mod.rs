@@ -1,14 +1,14 @@
-use crate::hand_evaluator::fast_hand::*;
-use crate::poker_basics::card::PokerHand;
-
 pub mod fast_hand;
 pub mod flush;
-pub mod flush_evaluator;
-pub mod non_flush_evaluator;
-pub mod ranks;
+mod flush_evaluator;
+mod non_flush_evaluator;
+mod ranks;
 
-use flush_evaluator::*;
-use non_flush_evaluator::*;
+use flush_evaluator::FlushEvaluator;
+use non_flush_evaluator::NonFlushEvaluator;
+
+use crate::hand_evaluator::fast_hand::*;
+use crate::poker_basics::card::PokerHand;
 
 #[derive(Clone, PartialEq, Eq)]
 pub struct PokerHandEvaluator {

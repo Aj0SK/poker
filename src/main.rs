@@ -22,7 +22,7 @@ fn main() {
         println!("{} {}\n", i, hand);
     }*/
 
-    for i in 0..100 {
+    for _ in 0..100 {
         let mut n = String::new();
         let hand1: PokerHand = rand::random();
         let hand2: PokerHand = rand::random();
