@@ -43,9 +43,15 @@ impl PokerHandFast {
     }
 }
 
+////////////////////////////////////////// Tests ///////////////////////////////////////
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::prelude::StdRng;
+    use rand::seq::SliceRandom;
+    use rand::SeedableRng;
+
     #[test]
     fn is_flush_true() {
         let c1 = [
@@ -69,6 +75,39 @@ mod tests {
         assert_eq!(PokerHand::new(c1).get_fast().is_flush(), true);
         assert_eq!(PokerHand::new(c2).get_fast().is_flush(), true);
     }
+
+    #[test]
+    fn is_flush_true_automated() {
+        let mut rng: StdRng = SeedableRng::seed_from_u64(2104);
+        for _ in 0..100 {
+            let flush_suit = rand::random::<Suit>();
+            let flush_cards_count = (5..=7)
+                .collect::<Vec<usize>>()
+                .choose(&mut rng)
+                .cloned()
+                .unwrap();
+            let flush_values = (0..13)
+                .collect::<Vec<u64>>()
+                .choose_multiple(&mut rng, flush_cards_count)
+                .cloned()
+                .collect::<Vec<u64>>();
+
+            let mut cards: Vec<PokerCard> = Vec::new();
+            for value in flush_values.iter() {
+                cards.push(PokerCard::new(flush_suit, *value));
+            }
+
+            while cards.len() != 7 {
+                let card = rand::random::<PokerCard>();
+                if card.get_suit() != flush_suit {
+                    cards.push(card);
+                }
+            }
+            let hand = PokerHand::from_cards(cards.into_iter());
+            assert_eq!(hand.get_fast().is_flush(), true);
+        }
+    }
+
     #[test]
     fn is_flush_false() {
         let c3 = [
@@ -81,5 +120,26 @@ mod tests {
             (Suit::H, 6),
         ];
         assert_eq!(PokerHand::new(c3).get_fast().is_flush(), false);
+    }
+
+    #[test]
+    fn is_flush_false_automated() {
+        let mut tested = 0;
+        while tested != 100 {
+            let hand = rand::random::<PokerHand>();
+            let mut suit_counts = [0, 0, 0, 0];
+            for card in hand.cards.iter() {
+                suit_counts[card.get_suit() as usize] += 1;
+            }
+            if suit_counts[0] >= 5
+                || suit_counts[1] >= 5
+                || suit_counts[2] >= 5
+                || suit_counts[3] >= 5
+            {
+                continue;
+            }
+            assert_eq!(hand.get_fast().is_flush(), false);
+            tested += 1;
+        }
     }
 }

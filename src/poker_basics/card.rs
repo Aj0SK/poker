@@ -23,17 +23,20 @@ pub struct PokerCard {
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct PokerHand {
-    cards: [PokerCard; 7],
+    pub cards: [PokerCard; 7],
 }
 
 //////////////////////////////////////// impl ////////////////////////////////////////
 
 impl PokerCard {
-    fn new(suit: Suit, value: u64) -> Self {
+    pub fn new(suit: Suit, value: u64) -> Self {
         if value > 12 {
             panic!("Card value higher than 12.");
         }
         Self { suit, value }
+    }
+    pub fn get_suit(&self) -> Suit {
+        self.suit
     }
 }
 
