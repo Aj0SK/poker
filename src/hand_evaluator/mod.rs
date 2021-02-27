@@ -3,6 +3,7 @@ pub mod flush;
 mod flush_evaluator;
 mod non_flush_evaluator;
 mod ranks;
+mod suit_only_fast_hand;
 
 use flush_evaluator::FlushEvaluator;
 use non_flush_evaluator::NonFlushEvaluator;

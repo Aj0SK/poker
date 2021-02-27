@@ -54,7 +54,7 @@ mod tests {
 
     #[test]
     fn is_flush_true() {
-        let c1 = [
+        let c1 = vec![
             (Suit::C, 0),
             (Suit::C, 1),
             (Suit::C, 2),
@@ -63,7 +63,7 @@ mod tests {
             (Suit::D, 5),
             (Suit::D, 6),
         ];
-        let c2 = [
+        let c2 = vec![
             (Suit::C, 0),
             (Suit::C, 1),
             (Suit::D, 2),
@@ -72,8 +72,20 @@ mod tests {
             (Suit::D, 5),
             (Suit::D, 6),
         ];
-        assert_eq!(PokerHand::new(c1).get_fast().is_flush(), true);
-        assert_eq!(PokerHand::new(c2).get_fast().is_flush(), true);
+        assert_eq!(
+            PokerHand::new(c1.into_iter())
+                .unwrap()
+                .get_fast()
+                .is_flush(),
+            true
+        );
+        assert_eq!(
+            PokerHand::new(c2.into_iter())
+                .unwrap()
+                .get_fast()
+                .is_flush(),
+            true
+        );
     }
 
     #[test]
@@ -98,12 +110,20 @@ mod tests {
             }
 
             while cards.len() != 7 {
-                let card = rand::random::<PokerCard>();
-                if card.get_suit() != flush_suit {
-                    cards.push(card);
+                let card1 = rand::random::<PokerCard>();
+                let card2 = rand::random::<PokerCard>();
+                if card1 != card2
+                    && card1.get_suit() != flush_suit
+                    && card2.get_suit() != flush_suit
+                {
+                    cards.push(card1);
+                    if cards.len() != 7 {
+                        cards.push(card2);
+                    }
+                    break;
                 }
             }
-            let hand = PokerHand::from_cards(cards.into_iter());
+            let hand = PokerHand::from_cards(cards.into_iter()).unwrap();
             assert_eq!(hand.get_fast().is_flush(), true);
             assert_eq!(
                 hand.get_fast().flush_val().count_ones() as u64,
@@ -114,7 +134,7 @@ mod tests {
 
     #[test]
     fn is_flush_false() {
-        let c3 = [
+        let c3 = vec![
             (Suit::C, 0),
             (Suit::D, 1),
             (Suit::H, 2),
@@ -123,7 +143,13 @@ mod tests {
             (Suit::D, 5),
             (Suit::H, 6),
         ];
-        assert_eq!(PokerHand::new(c3).get_fast().is_flush(), false);
+        assert_eq!(
+            PokerHand::new(c3.into_iter())
+                .unwrap()
+                .get_fast()
+                .is_flush(),
+            false
+        );
     }
 
     #[test]

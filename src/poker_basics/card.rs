@@ -1,13 +1,15 @@
 extern crate rand;
+
 use crate::hand_evaluator::fast_hand::PokerHandFast;
 use rand::distributions::{Distribution, Standard};
 use rand::seq::SliceRandom;
 use rand::Rng;
+use std::collections::HashSet;
 use std::convert::TryFrom;
 use std::convert::TryInto;
 use std::fmt;
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum Suit {
     S = 0, //Spades
     H = 1, //Hearts
@@ -15,13 +17,13 @@ pub enum Suit {
     C = 3, //Clubs
 }
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub struct PokerCard {
     suit: Suit,
     value: u64,
 } // suit and value from 0 to 12
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub struct PokerHand {
     pub cards: [PokerCard; 7],
 }
@@ -41,21 +43,32 @@ impl PokerCard {
 }
 
 impl PokerHand {
-    pub fn new(arr: [(Suit, u64); 7]) -> Self {
+    pub fn new(input: impl Iterator<Item = (Suit, u64)>) -> Result<Self, ()> {
         let mut cards: Vec<PokerCard> = Vec::new();
-        for (suit, value) in arr.iter() {
+        for (suit, value) in input.collect::<Vec<(Suit, u64)>>().iter() {
+            if *value >= 13 {
+                return Err(());
+            }
             cards.push(PokerCard::new(*suit, *value));
         }
         PokerHand::from_cards(cards.into_iter())
     }
-    pub fn from_cards(input: impl Iterator<Item = PokerCard>) -> Self {
+    pub fn from_cards(input: impl Iterator<Item = PokerCard>) -> Result<Self, ()> {
         let cards: Vec<PokerCard> = input.collect();
         if cards.len() != 7 {
-            panic!("Number of cards is not equal 7!");
+            return Err(());
         }
-        PokerHand {
+        let mut already_contained: HashSet<PokerCard> = HashSet::new();
+        for card in cards.iter() {
+            if already_contained.contains(card) {
+                return Err(());
+            }
+            already_contained.insert(*card);
+        }
+
+        Ok(PokerHand {
             cards: cards.try_into().unwrap(),
-        }
+        })
     }
 
     pub fn get_fast(&self) -> PokerHandFast {
@@ -77,6 +90,13 @@ impl TryFrom<u64> for Suit {
             x if x == Suit::C as u64 => Ok(Suit::C),
             _ => Err(()),
         }
+    }
+}
+
+impl TryFrom<Vec<(Suit, u64)>> for PokerHand {
+    type Error = ();
+    fn try_from(maybe_hand: Vec<(Suit, u64)>) -> Result<Self, Self::Error> {
+        PokerHand::new(maybe_hand.into_iter())
     }
 }
 
@@ -159,6 +179,36 @@ mod tests {
     use rand::SeedableRng;
 
     #[test]
+    fn create_valid_poker_card() {
+        let _: PokerHand = vec![
+            (Suit::S, 0),
+            (Suit::S, 1),
+            (Suit::S, 2),
+            (Suit::S, 3),
+            (Suit::S, 4),
+            (Suit::S, 5),
+            (Suit::S, 6),
+        ]
+        .try_into()
+        .unwrap();
+    }
+
+    #[test]
+    fn create_invalid_poker_card() {
+        let hand: Result<PokerHand, ()> = vec![
+            (Suit::S, 0),
+            (Suit::S, 0),
+            (Suit::S, 0),
+            (Suit::S, 0),
+            (Suit::S, 0),
+            (Suit::S, 0),
+            (Suit::S, 0),
+        ]
+        .try_into();
+        assert_eq!(hand.is_err(), true);
+    }
+
+    #[test]
     fn get_fast() {
         let mut all_cards = Vec::new();
 
@@ -177,7 +227,10 @@ mod tests {
                 result |= 1 << all_cards.iter().position(|&r| r == *card).unwrap();
             }
             assert_eq!(
-                PokerHand::from_cards(random_cards.into_iter()).get_fast().0,
+                PokerHand::from_cards(random_cards.into_iter())
+                    .unwrap()
+                    .get_fast()
+                    .0,
                 result
             );
         }
