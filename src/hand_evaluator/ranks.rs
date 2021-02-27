@@ -11,6 +11,51 @@ pub struct FourOfAKind {
     pub high_card: u64,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Straight {
+    pub hand: PokerHandNonFlush,
+    pub value_end: u64,
+    pub high_card: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FullHouse {
+    pub hand: PokerHandNonFlush,
+    pub value_three: u64,
+    pub value_pair: u64,
+    pub high_card: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ThreeOfAKind {
+    pub hand: PokerHandNonFlush,
+    pub value: u64,
+    pub high_card: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct TwoPairs {
+    pub hand: PokerHandNonFlush,
+    pub value1: u64,
+    pub value2: u64,
+    pub high_card: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Pair {
+    pub hand: PokerHandNonFlush,
+    pub value: u64,
+    pub high_card: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct HighCard {
+    pub hand: PokerHandNonFlush,
+    pub value: u64,
+}
+
+////////////////////////////////////////////// Ord //////////////////////////////////////////////
+
 impl Ord for FourOfAKind {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.value != other.value {
@@ -21,13 +66,6 @@ impl Ord for FourOfAKind {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Straight {
-    pub hand: PokerHandNonFlush,
-    pub value_end: u64,
-    pub high_card: u64,
-}
-
 impl Ord for Straight {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.value_end != other.value_end {
@@ -36,14 +74,6 @@ impl Ord for Straight {
             self.high_card.cmp(&other.high_card)
         }
     }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct FullHouse {
-    pub hand: PokerHandNonFlush,
-    pub value_three: u64,
-    pub value_pair: u64,
-    pub high_card: u64,
 }
 
 impl Ord for FullHouse {
@@ -58,13 +88,6 @@ impl Ord for FullHouse {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ThreeOfAKind {
-    pub hand: PokerHandNonFlush,
-    pub value: u64,
-    pub high_card: u64,
-}
-
 impl Ord for ThreeOfAKind {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.value != other.value {
@@ -73,14 +96,6 @@ impl Ord for ThreeOfAKind {
             self.high_card.cmp(&other.high_card)
         }
     }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct TwoPairs {
-    pub hand: PokerHandNonFlush,
-    pub value1: u64,
-    pub value2: u64,
-    pub high_card: u64,
 }
 
 impl Ord for TwoPairs {
@@ -95,13 +110,6 @@ impl Ord for TwoPairs {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Pair {
-    pub hand: PokerHandNonFlush,
-    pub value: u64,
-    pub high_card: u64,
-}
-
 impl Ord for Pair {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.value != other.value {
@@ -110,12 +118,6 @@ impl Ord for Pair {
             self.high_card.cmp(&other.high_card)
         }
     }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct HighCard {
-    pub hand: PokerHandNonFlush,
-    pub value: u64,
 }
 
 impl Ord for HighCard {

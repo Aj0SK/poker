@@ -7,7 +7,7 @@ use std::convert::TryFrom;
 use std::convert::TryInto;
 use std::fmt;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Suit {
     S = 0, //Spades
     H = 1, //Hearts
@@ -15,13 +15,13 @@ pub enum Suit {
     C = 3, //Clubs
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct PokerCard {
     suit: Suit,
     value: u64,
 } // suit and value from 0 to 12
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct PokerHand {
     cards: [PokerCard; 7],
 }
@@ -30,39 +30,37 @@ pub struct PokerHand {
 
 impl PokerCard {
     fn new(suit: Suit, value: u64) -> Self {
+        if value > 12 {
+            panic!("Card value higher than 12.");
+        }
         Self { suit, value }
     }
 }
 
 impl PokerHand {
     pub fn new(arr: [(Suit, u64); 7]) -> Self {
-        for (_, value) in arr.iter() {
-            if value >= &13 {
-                panic!("Card initialized with too big number!");
-            }
+        let mut cards: Vec<PokerCard> = Vec::new();
+        for (suit, value) in arr.iter() {
+            cards.push(PokerCard::new(*suit, *value));
         }
-        let cards: [PokerCard; 7] = [
-            PokerCard::new(arr[0].0, arr[0].1),
-            PokerCard::new(arr[1].0, arr[1].1),
-            PokerCard::new(arr[2].0, arr[2].1),
-            PokerCard::new(arr[3].0, arr[3].1),
-            PokerCard::new(arr[4].0, arr[4].1),
-            PokerCard::new(arr[5].0, arr[5].1),
-            PokerCard::new(arr[6].0, arr[6].1),
-        ];
-        PokerHand { cards }
+        PokerHand::from_cards(cards.into_iter())
+    }
+    pub fn from_cards(input: impl Iterator<Item = PokerCard>) -> Self {
+        let cards: Vec<PokerCard> = input.collect();
+        if cards.len() != 7 {
+            panic!("Number of cards is not equal 7!");
+        }
+        PokerHand {
+            cards: cards.try_into().unwrap(),
+        }
     }
 
     pub fn get_fast(&self) -> PokerHandFast {
         let mut repr: u64 = 0;
-        for i in self.cards.iter() {
-            match i {
-                PokerCard { suit, value } => {
-                    repr |= 1 << (13 * (*suit as u64) + value);
-                }
-            }
+        for PokerCard { suit, value } in self.cards.iter() {
+            repr |= 1 << (13 * (*suit as u64) + value);
         }
-        PokerHandFast(repr)
+        PokerHandFast::new_raw(repr)
     }
 }
 
@@ -146,6 +144,39 @@ impl Distribution<Suit> for Standard {
             1 => Suit::H,
             2 => Suit::D,
             _ => Suit::C,
+        }
+    }
+}
+
+////////////////////////////////////////// Tests ///////////////////////////////////////
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand::prelude::StdRng;
+    use rand::SeedableRng;
+
+    #[test]
+    fn get_fast() {
+        let mut all_cards = Vec::new();
+
+        for i in 0..4 {
+            for j in 0..13 {
+                all_cards.push(PokerCard::new(Suit::try_from(i).unwrap(), j));
+            }
+        }
+
+        let mut rng: StdRng = SeedableRng::seed_from_u64(2104);
+        for _ in 0..100 {
+            let random_cards: Vec<PokerCard> =
+                all_cards.choose_multiple(&mut rng, 7).cloned().collect();
+            let mut result = 0;
+            for card in random_cards.iter() {
+                result |= 1 << all_cards.iter().position(|&r| r == *card).unwrap();
+            }
+            assert_eq!(
+                PokerHand::from_cards(random_cards.into_iter()).get_fast().0,
+                result
+            );
         }
     }
 }

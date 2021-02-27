@@ -69,6 +69,7 @@ mod tests {
         assert_eq!(PokerHand::new(c1).get_fast().is_flush(), true);
         assert_eq!(PokerHand::new(c2).get_fast().is_flush(), true);
     }
+    #[test]
     fn is_flush_false() {
         let c3 = [
             (Suit::C, 0),
